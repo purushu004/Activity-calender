@@ -7,8 +7,8 @@ export const SelectedActivity = ({currentWorkTimings, name}) => {
         <Fragment>
           <h2>{name}'s work timings are </h2>
           <ul>
-            <li>Start Time - {currentWorkTimings[0]}</li>
-            <li>End Time - {currentWorkTimings[1]}</li>
+            <li>Start Time{currentWorkTimings[0]}</li>
+            <li>End Time{currentWorkTimings[1]}</li>
           </ul>
         </Fragment>
   }

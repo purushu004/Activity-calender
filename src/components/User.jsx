@@ -4,5 +4,5 @@ export const User = ({activity, name, userClickHanlder}) => {
     const userLocalClickHandler = () => {
         userClickHanlder(activity, name)
     }
-    return <button type="button" class="user-item btn btn-dark d-block mx-auto px-md-5 mb-3" onClick={userLocalClickHandler} >{name}</button>
+    return <button onClick={userLocalClickHandler} >this is {name}</button>
 }

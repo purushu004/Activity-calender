@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
-import axios from 'axios';
 import moment from 'moment';
 
 import { User } from './../components/User';
@@ -24,7 +23,7 @@ class Home extends Component {
         }
 
         this.modalToggler = this.modalToggler.bind(this);
-        this.randomClickHandler = this.randomClickHandler.bind(this);
+        this.modalClickHandler = this.modalClickHandler.bind(this);
         this.generateDateFromString = this.generateDateFromString.bind(this);
         this.getMonth = this.getMonth.bind(this);
         this.getTimeInDefaultFormat = this.getTimeInDefaultFormat.bind(this);
@@ -43,7 +42,7 @@ class Home extends Component {
         this.getUsersData('https://raw.githubusercontent.com/purushu004/Activity-calender/master/src/db.json')
     }
 
-    randomClickHandler(param,user) {
+    modalClickHandler(param,user) {
         var eventDates = [];
         this.modalToggler();
         this.setState({currentUserActivity: param})
@@ -95,13 +94,13 @@ class Home extends Component {
 
     getMonth(monthString) {
         var months = ["", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
-        var isMonthMatch = (element) => element == monthString;
+        var isMonthMatch = (element) => element === monthString;
         var index = months.findIndex(isMonthMatch);
         return index;
     }
 
     getTimeInDefaultFormat(time) {
-        let [getTime, hours, minutes, AMPM] = time.match(/([0-9]|0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])\s*([AaPp][Mm])/);
+        let [hours, minutes, AMPM] = time.match(/([0-9]|0[0-9]|1[0-9]|2[0-3]):([0-5][0-9])\s*([AaPp][Mm])/);
             hours = Number(hours);
             minutes = Number(minutes);
         if(AMPM === "PM" && hours<12) hours = hours+12;
@@ -129,26 +128,32 @@ class Home extends Component {
         this.generateDateFromString("Feb 1 2020  1:33PM");
         return(
             <Fragment>
-                {this.state.data === [] ? null : this.state.data.map((user, i) => <User key={i} name={user.real_name} userClickHanlder={this.randomClickHandler} activity={user.activity_periods}/>)}
-                <Modal isOpen={this.state.isModalOpen} toggle={this.modalToggler}>
-                    <ModalHeader toggle={this.modalToggler}>{this.state.currentUser}</ModalHeader>
-                    <ModalBody>
-                        <Calendar
-                            popup
-                            localizer={momentLocalizer(moment)}
-                            events = {this.state.currentUserEvents}
-                            style={{ height: 500 }}
-                            onSelectSlot={this.dateSelectHandler}
-                            selectable={true}
-                        />
-                        {
-                            (!this.state.isDateActivitySelected)? <NullComponent/> : <SelectedActivity currentWorkTimings={this.state.selectedDateUserActivity} name={this.state.currentUser}/>
-                        }
-                    </ModalBody>
-                    <ModalFooter>
-                    <Button color="secondary" onClick={this.modalToggler}>Cancel</Button>
-                    </ModalFooter>
-                </Modal>
+                <div class="container border shadow-lg p-3 mb-5 bg-white rounded">
+                    <h2 class="d-flex justify-content-center">Users List</h2>
+                    <div class="d-block mx-auto">
+                        {this.state.data === [] ? null : this.state.data.map((user, i) => <User key={i} name={user.real_name} userClickHanlder={this.modalClickHandler} activity={user.activity_periods}/>)}
+                    </div>
+                    <Modal isOpen={this.state.isModalOpen} toggle={this.modalToggler} size="lg">
+                        <ModalHeader toggle={this.modalToggler}>{this.state.currentUser}'s Timeline</ModalHeader>
+                        <ModalBody>
+                            <Calendar
+                                popup
+                                localizer={momentLocalizer(moment)}
+                                events = {this.state.currentUserEvents}
+                                style={{ height: 600 }}
+                                onSelectSlot={this.dateSelectHandler}
+                                selectable={true}
+                                defaultDate={new Date(2020, 2, 1)}
+                            />
+                            {
+                                (!this.state.isDateActivitySelected)? <NullComponent/> : <SelectedActivity currentWorkTimings={this.state.selectedDateUserActivity} name={this.state.currentUser}/>
+                            }
+                        </ModalBody>
+                        <ModalFooter>
+                        <Button color="secondary" onClick={this.modalToggler}>Cancel</Button>
+                        </ModalFooter>
+                    </Modal>
+                </div>
             </Fragment>
         )
     }

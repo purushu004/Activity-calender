@@ -11,6 +11,9 @@ Runs the app in the development mode.<br />
 The page will reload if you make edits.<br />
 You will also see any lint errors in the console.
 
+## API
+Using github raw API for fetching the json file https://raw.githubusercontent.com/purushu004/Activity-calender/master/src/db.json
+
 ## Libraries
 In this project I have used below libraries to achieve the task.
 

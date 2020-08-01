@@ -2,7 +2,6 @@ import React, { Component, Fragment } from 'react';
 
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
-import axios from 'axios';
 import moment from 'moment';
 
 import { User } from './../components/User';
@@ -95,7 +94,7 @@ class Home extends Component {
 
     getMonth(monthString) {
         var months = ["", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"];
-        var isMonthMatch = (element) => element == monthString;
+        var isMonthMatch = (element) => element === monthString;
         var index = months.findIndex(isMonthMatch);
         return index;
     }
@@ -129,26 +128,30 @@ class Home extends Component {
         this.generateDateFromString("Feb 1 2020  1:33PM");
         return(
             <Fragment>
-                {this.state.data === [] ? null : this.state.data.map((user, i) => <User key={i} name={user.real_name} userClickHanlder={this.randomClickHandler} activity={user.activity_periods}/>)}
-                <Modal isOpen={this.state.isModalOpen} toggle={this.modalToggler}>
-                    <ModalHeader toggle={this.modalToggler}>{this.state.currentUser}</ModalHeader>
-                    <ModalBody>
-                        <Calendar
-                            popup
-                            localizer={momentLocalizer(moment)}
-                            events = {this.state.currentUserEvents}
-                            style={{ height: 500 }}
-                            onSelectSlot={this.dateSelectHandler}
-                            selectable={true}
-                        />
-                        {
-                            (!this.state.isDateActivitySelected)? <NullComponent/> : <SelectedActivity currentWorkTimings={this.state.selectedDateUserActivity} name={this.state.currentUser}/>
-                        }
-                    </ModalBody>
-                    <ModalFooter>
-                    <Button color="secondary" onClick={this.modalToggler}>Cancel</Button>
-                    </ModalFooter>
-                </Modal>
+                <div className="container border shadow-lg p-3 mb-5 bg-white rounded">
+                    <h2 className="d-flex justify-content-center">Users List</h2>
+                    {this.state.data === [] ? null : this.state.data.map((user, i) => <User key={i} name={user.real_name} userClickHanlder={this.randomClickHandler} activity={user.activity_periods}/>)}
+                    <Modal isOpen={this.state.isModalOpen} toggle={this.modalToggler} size="lg">
+                        <ModalHeader toggle={this.modalToggler}>{this.state.currentUser}'s Timeline</ModalHeader>
+                        <ModalBody>
+                            <Calendar
+                                popup
+                                localizer={momentLocalizer(moment)}
+                                events = {this.state.currentUserEvents}
+                                style={{ height: 600 }}
+                                onSelectSlot={this.dateSelectHandler}
+                                selectable={true}
+                                defaultDate={new Date(2020, 2, 1)}
+                            />
+                            {
+                                (!this.state.isDateActivitySelected)? <NullComponent/> : <SelectedActivity currentWorkTimings={this.state.selectedDateUserActivity} name={this.state.currentUser}/>
+                            }
+                        </ModalBody>
+                        <ModalFooter>
+                        <Button color="secondary" onClick={this.modalToggler}>Cancel</Button>
+                        </ModalFooter>
+                    </Modal>
+                </div>
             </Fragment>
         )
     }
